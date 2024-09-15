@@ -4,47 +4,47 @@ using System.Collections.Generic;
 namespace ObjectData
 {
    
-    public interface IObject
-    {              
-        string name {get; set;}
-    }
+    // public interface IObject
+    // {              
+    //     string name {get; set;}
+    // }
 
     public interface MyComparable<T>
     {
-        int CompareTo(T other);
+        int MyCompareTo(T other);
     }
 
-    public class Movie : IObject, MyComparable<Movie>
+    public class Movie : MyComparable<Movie>
     {
         public string name {get;set;}
         public int release_date {get;set;}
-        public int CompareTo(Movie other)
+        public int MyCompareTo(Movie other)
         {
-            return release_date.CompareTo(other.release_date);
+            return release_date.MyCompareTo(other.release_date);
         }
     }
 
-    public class Student : IObject, MyComparable<Student>
+    public class Student : MyComparable<Student>
     {
         public string name {get;set;}
         public int dob {get;set;}
-        public int CompareTo(Student other)
+        public int MyCompareTo(Student other)
         {
-            return dob.CompareTo(other.dob);
+            return dob.MyCompareTo(other.dob);
         }
     }  
  
 
    public static class Sorter
 {
-    public static void Sort<T>(List<T> items) where T : IObject, MyComparable<T>
+    public static void Sort<T>(List<T> items) where T :  MyComparable<T>
     {
         int n = items.Count;
         for (int i = 0; i < n - 1; i++)
         {
             for (int j = 0; j < n - i - 1; j++)
             {
-                if (items[j].CompareTo(items[j + 1]) > 0)
+                if (items[j].MyCompareTo(items[j + 1]) > 0)
                 {                   
                     T temp = items[j];
                     items[j] = items[j + 1];
@@ -56,24 +56,24 @@ namespace ObjectData
 }
 public static class Printer
 {
-    public static void Print<T>(List<T> items) where T : IObject
+    public static void Print<T>(List<T> items) where T : MyComparable<T>
     {
-        Console.WriteLine($"\n{typeof(T).Name} List");
-        Console.WriteLine("-----------------------------------------------------");
-        foreach (var item in items)
-        {
+    
+        // Console.WriteLine("-----------------------------------------------------");
+        // foreach (var item in items)
+        // {
             
-            if (item is Movie movie)
-            {
-                Console.WriteLine($"Name: {item.name}, Release Date: {movie.release_date}");
+        //     if (item is Movie movie)
+        //     {
+        //         Console.WriteLine($"Name: {item.name}, Release Date: {movie.release_date}");
                
-            }
-            else if (item is Student student)
-            {
-                Console.WriteLine($"Name: {item.name}, Date of Birth: {student.dob}");
+        //     }
+        //     else if (item is Student student)
+        //     {
+        //         Console.WriteLine($"Name: {item.name}, Date of Birth: {student.dob}");
               
-            }
-        }
+        //     }
+        // }
     }
 }
 }
