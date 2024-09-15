@@ -16,17 +16,15 @@ namespace MovieApp
             string studentData = File.ReadAllText(studentJsonFilePath);          
 
             //giải mã nội dung JSON thành danh sách các đối tượng    
-            List<Movie> movies = JsonConvert.DeserializeObject<List<Movie>>(movieData);
-       
-            // List<Movie> movies = new List<Movie>(movieList);
+            List<Movie> movies = JsonConvert.DeserializeObject<List<Movie>>(movieData);  
+   
 
             List<Student> students = JsonConvert.DeserializeObject<List<Student>>(studentData);
        
-            // List<Student> students = new List<Student>(studentList);
-
+           
        
-            Sorter.Sort(movies, m => m.release_date);
-            Sorter.Sort(students, s => s.dob);
+            Sorter.Sort(movies);
+            Sorter.Sort(students);
 
               
             Printer.Print(movies);
