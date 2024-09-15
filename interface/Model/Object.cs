@@ -22,62 +22,44 @@ namespace ObjectData
     }  
  
 
-   public class Sorter
+   public static class Sorter
 {
-    public void sort(List<Movie> movies)
+    public static void Sort<T>(List<T> items, Func<T, IComparable> keySelector) where T : IObject
     {
-        int n = movies.Count;
+        int n = items.Count;
         for (int i = 0; i < n - 1; i++)
         {
             for (int j = 0; j < n - i - 1; j++)
             {
-                if (movies[j].release_date > movies[j + 1].release_date)
-                {
-                    Movie temp = movies[j];
-                    movies[j] = movies[j + 1];
-                    movies[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-    public void sort(List<Student> students)
-    {
-        int n = students.Count;
-        for (int i = 0; i < n - 1; i++)
-        {
-            for (int j = 0; j < n - i - 1; j++)
-            {
-                if (students[j].dob > students[j + 1].dob)
-                {                 
-                    Student temp = students[j];
-                    students[j] = students[j + 1];
-                    students[j + 1] = temp;
+                if (keySelector(items[j]).CompareTo(keySelector(items[j + 1])) > 0)
+                {                   
+                    T temp = items[j];
+                    items[j] = items[j + 1];
+                    items[j + 1] = temp;
                 }
             }
         }
     }
 }
-
-public class Printer
+public static class Printer
 {
-    public void print(List<Movie> movies)
+    public static void Print<T>(List<T> items) where T : IObject
     {
-        Console.WriteLine("Movie List");
+        Console.WriteLine($"\n{typeof(T).Name} List");
         Console.WriteLine("-----------------------------------------------------");
-        foreach (var movie in movies)
+        foreach (var item in items)
         {
-            Console.WriteLine($"Movie name: {movie.name}, Release Date: {movie.release_date}");
-        }
-    }
-
-    public  void print(List<Student> students)
-    {
-        Console.WriteLine("\nStudent List");
-        Console.WriteLine("-----------------------------------------------------");
-        foreach (var student in students)
-        {
-            Console.WriteLine($"Student name: {student.name}, Date of Birth: {student.dob}");
+            
+            if (item is Movie movie)
+            {
+                Console.WriteLine($"Name: {item.name}, Release Date: {movie.release_date}");
+               
+            }
+            else if (item is Student student)
+            {
+                Console.WriteLine($"Name: {item.name}, Date of Birth: {student.dob}");
+              
+            }
         }
     }
 }
