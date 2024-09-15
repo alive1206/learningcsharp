@@ -2,7 +2,7 @@
 using System.Collections.Generic; //sử dụng List
 using System.IO; //đọc file
 using Newtonsoft.Json; //sử dụng json convert
-using MovieData; //sử dụng các thuộc tính của lớp movie
+using ObjectData; //sử dụng các thuộc tính của lớp movie
 
 namespace MovieApp
 {
@@ -10,21 +10,28 @@ namespace MovieApp
     {
         static void Main(string[] args){
             //đọc file json
-            string jsonFilePath = "./Data/movie_data.json";
-            string jsonData = File.ReadAllText(jsonFilePath);            
+            string movieJsonFilePath = "./Data/movie_data.json";
+            string movieData = File.ReadAllText(movieJsonFilePath);       
+            string studentJsonFilePath = "./Data/student_data.json";
+            string studentData = File.ReadAllText(studentJsonFilePath);          
 
-            //giải mã nội dung JSON thành danh sách các đối tượng Movie         
-            List<Movie> movieList = JsonConvert.DeserializeObject<List<Movie>>(jsonData);
+            //giải mã nội dung JSON thành danh sách các đối tượng    
+            List<Movie> movieList = JsonConvert.DeserializeObject<List<Movie>>(movieData);
        
             List<Movie> movies = new List<Movie>(movieList);
-       
-            MovieAscending movieAscending = new MovieAscending();
-            movieAscending.SortMovies(movies);
-       
-            MovieDescending movieDescending = new MovieDescending();
-            movieDescending.SortMovies(movies);
 
-          
+            List<Student> studentList = JsonConvert.DeserializeObject<List<Student>>(studentData);
+       
+            List<Student> students = new List<Student>(studentList);
+
+            Sorter Sorter = new Sorter();
+            Sorter.sort(movies);
+            Sorter.sort(students);
+
+            Printer Printer = new Printer();         
+            Printer.print(movies);
+            Printer.print(students);      
+                      
         } 
     }
 }
