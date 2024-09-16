@@ -3,77 +3,98 @@ using System.Collections.Generic;
 
 namespace ObjectData
 {
-   
-    // public interface IObject
-    // {              
-    //     string name {get; set;}
-    // }
 
-    public interface MyComparable<T>
+    public interface IMyComparable
     {
-        int MyCompareTo(T other);
+        int MyCompareTo(Object other);
     }
 
-    public class Movie : MyComparable<Movie>
+    public interface IMyPrintable
     {
-        public string name {get;set;}
-        public int release_date {get;set;}
-        public int MyCompareTo(Movie other)
+        void Print();
+    }
+
+    public class Movie : IMyComparable, IMyPrintable
+    {
+        public string name { get; set; }
+        public int release_date { get; set; }
+        public int MyCompareTo(Object o)
         {
-            return release_date.MyCompareTo(other.release_date);
+            if (o == null || o is not Movie) throw new InvalidDataException("Invalid Movie");
+
+            var other = (Movie)o;
+
+            if (release_date == other.release_date) return 0;
+            if (release_date > other.release_date) return 1;
+            return -1;
+
+        }
+
+        public void Print (){           
+            Console.WriteLine($"Name: {name}, Release Date: {release_date}");
         }
     }
 
-    public class Student : MyComparable<Student>
+    public class Student : IMyComparable, IMyPrintable
     {
-        public string name {get;set;}
-        public int dob {get;set;}
-        public int MyCompareTo(Student other)
+        public string name { get; set; }
+        public int dob { get; set; }
+        public int MyCompareTo(Object o)
         {
-            return dob.MyCompareTo(other.dob);
-        }
-    }  
- 
 
-   public static class Sorter
-{
-    public static void Sort<T>(List<T> items) where T :  MyComparable<T>
+            if (o == null || o is not Student) throw new InvalidDataException("Invalid Student");
+
+            var other = (Student)o;
+
+            if (dob == other.dob) return 0;
+            if (dob > other.dob) return 1;
+            return -1;
+        }
+        public void Print (){            
+            Console.WriteLine($"Name: {name}, Release Date: {dob}");
+        }
+    }
+
+
+    public static class Sorter
     {
-        int n = items.Count;
-        for (int i = 0; i < n - 1; i++)
+        public static IEnumerable<IMyComparable> Sort(IEnumerable<IMyComparable> items)
         {
-            for (int j = 0; j < n - i - 1; j++)
+            // Convert to List to allow sorting
+            var itemList = items.ToList();
+
+            int n = itemList.Count;
+            for (int i = 0; i < n - 1; i++)
             {
-                if (items[j].MyCompareTo(items[j + 1]) > 0)
-                {                   
-                    T temp = items[j];
-                    items[j] = items[j + 1];
-                    items[j + 1] = temp;
+                for (int j = 0; j < n - i - 1; j++)
+                {
+                    if (itemList[j].MyCompareTo(itemList[j + 1]) > 0)
+                    {
+                        // Swap items
+                        var temp = itemList[j];
+                        itemList[j] = itemList[j + 1];
+                        itemList[j + 1] = temp;
+                    }
                 }
             }
+
+            return itemList; // Return the sorted list
         }
+
+        
     }
-}
-public static class Printer
-{
-    public static void Print<T>(List<T> items) where T : MyComparable<T>
-    {
-    
-        // Console.WriteLine("-----------------------------------------------------");
-        // foreach (var item in items)
-        // {
+
+    public static class Printer
+        {
             
-        //     if (item is Movie movie)
-        //     {
-        //         Console.WriteLine($"Name: {item.name}, Release Date: {movie.release_date}");
-               
-        //     }
-        //     else if (item is Student student)
-        //     {
-        //         Console.WriteLine($"Name: {item.name}, Date of Birth: {student.dob}");
-              
-        //     }
-        // }
-    }
-}
+                public static void Print(IEnumerable<IMyPrintable> items)
+                {
+                    Console.WriteLine("-----------------------------------------------------");
+                    foreach (var item in items)
+                    {
+                       item.Print();
+                    }
+                }
+            
+        }
 }

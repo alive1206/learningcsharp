@@ -4,7 +4,7 @@ using System.IO; //đọc file
 using Newtonsoft.Json; //sử dụng json convert
 using ObjectData; //sử dụng các thuộc tính của lớp movie
 
-namespace MovieApp
+namespace App
 {
     class Program
     {
@@ -19,16 +19,19 @@ namespace MovieApp
             List<Movie> movies = JsonConvert.DeserializeObject<List<Movie>>(movieData);  
    
 
-            List<Student> students = JsonConvert.DeserializeObject<List<Student>>(studentData);
-       
+            List<Student> students = JsonConvert.DeserializeObject<List<Student>>(studentData);    
            
        
-            Sorter.Sort(movies);
-            Sorter.Sort(students);
+          
+            if (movies != null && students != null ) {
+       
+                var mvs = Sorter.Sort(movies).Cast<IMyPrintable>();
+                var stds = Sorter.Sort(students).Cast<IMyPrintable>();
 
-              
-            Printer.Print(movies);
-            Printer.Print(students);      
+                
+                Printer.Print(mvs);
+                Printer.Print(stds);      
+            } 
                       
         } 
     }
