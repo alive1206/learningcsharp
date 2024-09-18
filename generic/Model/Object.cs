@@ -14,43 +14,44 @@ namespace ObjectData
         void Print();
     }
 
-    public class Movie : IMyComparable, IMyPrintable
+    public abstract class EntityBase<T> : IMyComparable, IMyPrintable 
+    {
+        public abstract int CompareTo(T other);
+
+         public int MyCompareTo(object other)
+        {
+            if (other == null || other is not T)
+                throw new InvalidOperationException("Invalid comparison");
+            return CompareTo((T)other);
+        }
+
+         public abstract void Print();
+    }
+
+    public class Movie : EntityBase<Movie>
     {
         public string name { get; set; }
         public int release_date { get; set; }
-        public int MyCompareTo(Object o)
+        public override int CompareTo(Movie other)
         {
-            if (o == null || o is not Movie) throw new InvalidDataException("Invalid Movie");
-
-            var other = (Movie)o;
-
-            if (release_date == other.release_date) return 0;
-            if (release_date > other.release_date) return 1;
-            return -1;
+           return release_date.CompareTo(other.release_date);
 
         }
 
-        public void Print (){           
+        public override void Print (){           
             Console.WriteLine($"Name: {name}, Release Date: {release_date}");
         }
     }
 
-    public class Student : IMyComparable, IMyPrintable
+    public class Student : EntityBase<Student>
     {
         public string name { get; set; }
         public int dob { get; set; }
-        public int MyCompareTo(Object o)
+        public override int CompareTo(Student other)
         {
-
-            if (o == null || o is not Student) throw new InvalidDataException("Invalid Student");
-
-            var other = (Student)o;
-
-            if (dob == other.dob) return 0;
-            if (dob > other.dob) return 1;
-            return -1;
+            return dob.CompareTo(other.dob);
         }
-        public void Print (){            
+        public override void Print (){            
             Console.WriteLine($"Name: {name}, Release Date: {dob}");
         }
     }
@@ -58,7 +59,7 @@ namespace ObjectData
 
     public static class Sorter
     {
-        public static IEnumerable<IMyComparable> Sort(IEnumerable<IMyComparable> items)
+        public static IEnumerable<T> Sort<T>(IEnumerable<T> items) where T: IMyComparable
         {
             // Convert to List to allow sorting
             var itemList = items.ToList();
@@ -87,7 +88,7 @@ namespace ObjectData
     public static class Printer
         {
             
-                public static void Print(IEnumerable<IMyPrintable> items)
+                public static void Print<T>(IEnumerable<T> items) where T:IMyPrintable
                 {
                     Console.WriteLine("-----------------------------------------------------");
                     foreach (var item in items)

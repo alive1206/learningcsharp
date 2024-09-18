@@ -25,8 +25,8 @@ namespace App
           
             if (movies != null && students != null ) {
        
-                var mvs = Sorter.Sort(movies).Cast<IMyPrintable>();
-                var stds = Sorter.Sort(students).Cast<IMyPrintable>();
+                var mvs = Sorter.Sort(movies);
+                var stds = Sorter.Sort(students);
 
                 
                 Printer.Print(mvs);
